@@ -4,6 +4,7 @@ import { Appconfig } from './config/app-config.service';
 import {validate} from './config/env.validation';
 import { DatabaseModule } from './database/database.module';
 import { userModule } from './user/user.module';
+import { eventModule } from './event/event.module';
 
 
 @Module({
@@ -13,6 +14,7 @@ import { userModule } from './user/user.module';
   }),
   DatabaseModule,
   userModule,
+  eventModule,
 ],
   providers: [Appconfig],
 })
