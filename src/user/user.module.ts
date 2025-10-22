@@ -19,7 +19,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 })
 
 
-export class userModule{}
+export class UserModule{}
 
 function getJwtAsyncOption(): JwtModuleAsyncOptions{
     return{
