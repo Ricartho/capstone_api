@@ -6,6 +6,7 @@ import { Appconfig } from './config/app-config.service';
 import {validate} from './config/env.validation';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
+import { ReportModule } from './report/report.module';
 
 
 @Module({
@@ -15,6 +16,7 @@ import { UserModule } from './user/user.module';
   }),
   DatabaseModule,
   UserModule,
+  ReportModule,
 ],
   controllers: [AppController],
   providers: [AppService,Appconfig],
