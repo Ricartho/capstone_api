@@ -10,8 +10,8 @@ import {
 } from '@nestjs/swagger';
 
 
-@ApiTags('user')
-@Controller('user')
+@ApiTags('users')
+@Controller('users')
 export class UserController{
     
     constructor(private userService: UserService){}
@@ -22,7 +22,7 @@ export class UserController{
         @ApiResponse({
         status: 201,
         description: 'User create and saved in DB',
-        example: '{id: "68ae92da654aae1ba5aa7f87",name: "test", email: "test@test.test}',
+        example: '{id: "68ae92da654aae1ba5aa7f87", name: "test", email: "test@test.test}',
         })
         @ApiResponse({status: 400,description:'Error while creating new user'})
 
@@ -35,6 +35,7 @@ export class UserController{
         }
 
    @Post('/login')
+
         @ApiOperation({summary: 'Login'})
         @ApiResponse({
         status: 200,

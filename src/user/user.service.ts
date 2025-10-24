@@ -42,7 +42,9 @@ export class UserService {
         const newUserData = {
             name: name,
             email: email,
-            password: hashedPassword
+            password: hashedPassword,
+            admin: false,
+            active:false,
         }
 
         //send to DB and save
@@ -54,7 +56,9 @@ export class UserService {
         return {
             id: newUser.id,
             name: newUser.name,
-            email: newUser.email
+            email: newUser.email,
+            admin: newUser.admin,
+            active: newUser.active,
         };
     }
 
@@ -72,7 +76,7 @@ export class UserService {
       
             if(isPassMatch){
                 // return loggedUser;
-                const payload = {sub: loggedUser.id, username: loggedUser.email};
+                let payload = {sub: loggedUser.id, username: loggedUser.email};
                 return {
                     access_token : await this.jwtService.signAsync(payload),
                 };

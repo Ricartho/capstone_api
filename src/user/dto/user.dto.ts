@@ -19,4 +19,16 @@ export class UserDto{
         description: 'An email exemple',
     })
     public email: string;
+
+    @ApiProperty({
+        example: 'TRUE',
+        description: 'Define is user is an Admin or a Student'
+    })
+    public admin: boolean;
+
+    @ApiProperty({
+        example: 'TRUE',
+        description:'Define if user account is active or disable'
+    })
+    public active: boolean;
 }
