@@ -76,7 +76,7 @@ export class UserService {
       
             if(isPassMatch){
                 // return loggedUser;
-                const payload = {sub: loggedUser.id, username: loggedUser.email};
+                let payload = {sub: loggedUser.id, username: loggedUser.email};
                 return {
                     access_token : await this.jwtService.signAsync(payload),
                 };
