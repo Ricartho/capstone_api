@@ -7,7 +7,7 @@ export type UserDocument = HydratedDocument<User>;
 export class User{
     
     @Prop()
-    name: string;
+    studentNB: string;
 
     @Prop()
     email: string;
@@ -15,10 +15,10 @@ export class User{
     @Prop()
     password: string;
 
-    @Prop()
+    @Prop({default: false})
     admin: boolean;
 
-    @Prop()
+    @Prop({default: false})
     active: boolean;
 }
 
