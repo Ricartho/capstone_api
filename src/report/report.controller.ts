@@ -6,6 +6,14 @@ import { ReportService } from './report.service';
 export class ReportController {
     constructor(private readonly reportService: ReportService) {}
 
+    @Get('download/all')
+    async downloadAllReports(@Res() res: Response){
+        const reportBuffer = await this.reportService.generateAllReports();
+        res.setHeader('Content-Disposition', 'attachment; filename=all-events.txt');
+        res.setHeader('Content-Type', 'text/plain');
+        res.send(reportBuffer);
+    }
+
     @Get('download/:id')
     async downloadReport(@Param('id') id: string, @Res() res:Response){
         //Create the file
@@ -18,4 +26,5 @@ export class ReportController {
         //Send file
         res.send(fileBuffer);
     }
+
 }
