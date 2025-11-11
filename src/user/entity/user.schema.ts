@@ -18,7 +18,7 @@ export class User{
     @Prop({default: false})
     admin: boolean;
 
-    @Prop({default: false})
+    @Prop({default: true})
     active: boolean;
 }
 

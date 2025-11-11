@@ -40,6 +40,13 @@ export class EventDto{
     public eventDate: string;
 
     @ApiProperty({
+        example: '11:30 AM',
+        description: 'The time of the event',
+    })
+    public eventTime: string;
+
+
+    @ApiProperty({
         example: 'FALSE',
         description: 'Is the event still active or archived',
     })

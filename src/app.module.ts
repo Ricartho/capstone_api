@@ -3,8 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { Appconfig } from './config/app-config.service';
 import {validate} from './config/env.validation';
 import { DatabaseModule } from './database/database.module';
-import { userModule } from './user/user.module';
-import { eventModule } from './event/event.module';
+import { UserModule } from './user/user.module';
+import { EventModule } from './event/event.module';
 
 
 @Module({
@@ -13,8 +13,8 @@ import { eventModule } from './event/event.module';
           validate
   }),
   DatabaseModule,
-  userModule,
-  eventModule,
+  UserModule,
+  EventModule,
 ],
   providers: [Appconfig],
 })
