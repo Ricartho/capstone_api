@@ -16,3 +16,5 @@ The Applications is developed with NodeJs, using the NestJS framework.
 
 Further informations can be found on the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
 
+# capstone
+Student Engagement Web Portal
