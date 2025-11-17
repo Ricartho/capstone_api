@@ -57,6 +57,12 @@ export class EventDto{
         description:  'The date of the event is posted on the system',
     })
     public datePosted: string;
+
+    // @ApiProperty({
+    //     example: 'Author Test',
+    //     description:  'The author of the event',
+    // })
+    // public author: string;
     
 
 }

@@ -29,6 +29,9 @@ export class Event{
 
         @Prop({ type:Date, default: Date.now})
         datePosted: string
+
+        // @Prop()
+        // author:string
     }
 
 export const EventSchema = SchemaFactory.createForClass(Event);

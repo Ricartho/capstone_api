@@ -31,4 +31,10 @@ export class UserDto{
         description:'Define if user account is active or disable'
     })
     public active: boolean;
+
+      @ApiProperty({
+        example: '0',
+        description:'Login count of the user'
+    })
+    public loginCount: number;
 }

@@ -49,7 +49,7 @@ export class UserService {
 
         //send to DB and save
         const newUser = new this.UserModel(newUserData);
-
+        newUser.loginCount = 1;
         await newUser.save();
         Logger.log("Sign Up action completed");
         //return value correpond to the promise format
@@ -59,6 +59,7 @@ export class UserService {
             email: newUser.email,
             admin: newUser.admin,
             active: newUser.active,
+            loginCount: newUser.loginCount,
         };
     }
 
@@ -69,7 +70,7 @@ export class UserService {
 
         const {email,password} = dto;
 
-        const loggedUser = await this.UserModel.findOne({email:email},'id name password').exec();
+        const loggedUser = await this.UserModel.findOne({email:email},'id email password loginCount').exec();
 
         if(loggedUser){
             const isPassMatch = await bcrypt.compare(password,loggedUser.password);
@@ -77,6 +78,8 @@ export class UserService {
             if(isPassMatch){
                 // return loggedUser;
                 let payload = {sub: loggedUser.id, username: loggedUser.email};
+                loggedUser.loginCount = loggedUser.loginCount + 1;
+                loggedUser.save();
                 Logger.log("Sign In action completed");
                 return {
                     access_token : await this.jwtService.signAsync(payload),
