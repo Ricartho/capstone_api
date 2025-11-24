@@ -11,7 +11,7 @@ Student Engagement Web Portal (API)
 4. Config and Use the .env file, to set set DB and other configuration. A format of the .env file can be found in the .env-exemple file.
 5. The Applications is developed with NodeJs, using the NestJS framework.
 6. This API used an online Mongo database.
-7. Visit 'http://localhost:3000/spec' to see the API descriptions.
+7. Visit http://localhost:3000/spec to see the API descriptions.
 
 
 # Instructions
