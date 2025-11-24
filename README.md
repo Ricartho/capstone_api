@@ -15,10 +15,11 @@ Student Engagement Web Portal (API)
 
 
 # Instructions
-1. Copy & Paste .env-exemple file into .env file to set the mongo DB cluster ready.
-2. Ensure that NodeJs and NPM are installed.
-3. Run 'npm install', and wait for installtion of the necessaty packages.
-4. Run 'npm start' to launch the API.
+1. Clone the main branch of this repository.
+2. Ensure that NodeJs and NPM are installed. 
+3. Copy & Paste .env-exemple file into .env file to set the mongo DB cluster ready.
+4. Run 'npm install', and wait for installtion of the necessaty packages.
+5. Run 'npm start' to launch the API.
    
 # Resources
 
