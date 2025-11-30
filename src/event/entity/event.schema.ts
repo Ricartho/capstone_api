@@ -15,17 +15,23 @@ export class Event{
         @Prop()
         location: string;
 
-        @Prop()
+        @Prop({default: 0})
         reservationCount: number;
 
-        @Prop()
+        @Prop({ type: Date})
         eventDate: string;
 
         @Prop()
+        eventTime: string;
+
+        @Prop({default: false})
         archived: boolean;
 
-        @Prop()
+        @Prop({ type:Date, default: Date.now})
         datePosted: string
+
+        // @Prop()
+        // author:string
     }
 
 export const EventSchema = SchemaFactory.createForClass(Event);

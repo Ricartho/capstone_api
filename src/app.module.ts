@@ -5,8 +5,8 @@ import { AppService } from './app.service';
 import { Appconfig } from './config/app-config.service';
 import {validate} from './config/env.validation';
 import { DatabaseModule } from './database/database.module';
-import { UserModule } from './user/user.module';
-import { ReportModule } from './report/report.module';
+import { userModule } from './user/user.module';
+import { eventModule } from './event/event.module';
 
 
 @Module({
@@ -15,8 +15,8 @@ import { ReportModule } from './report/report.module';
           validate
   }),
   DatabaseModule,
-  UserModule,
-  ReportModule,
+  userModule,
+  eventModule,
 ],
   controllers: [AppController],
   providers: [AppService,Appconfig],

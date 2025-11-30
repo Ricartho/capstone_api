@@ -13,9 +13,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     imports:[
         MongooseModule.forFeature([{name:User.name, schema:UserSchema}]),
         JwtModule.registerAsync(getJwtAsyncOption()),
+        ConfigModule,
     ],
     controllers:[UserController],
-    providers:[UserService]
+    providers:[UserService],
+    exports: [UserService],
 })
 
 

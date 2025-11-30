@@ -40,6 +40,13 @@ export class EventDto{
     public eventDate: string;
 
     @ApiProperty({
+        example: '11:30 AM',
+        description: 'The time of the event',
+    })
+    public eventTime: string;
+
+
+    @ApiProperty({
         example: 'FALSE',
         description: 'Is the event still active or archived',
     })
@@ -50,6 +57,12 @@ export class EventDto{
         description:  'The date of the event is posted on the system',
     })
     public datePosted: string;
+
+    // @ApiProperty({
+    //     example: 'Author Test',
+    //     description:  'The author of the event',
+    // })
+    // public author: string;
     
 
 }

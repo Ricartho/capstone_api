@@ -11,6 +11,7 @@ import { LoginDto } from "./dto/login.dto";
 
 
 
+
 @Injectable()
 export class UserService {
 
@@ -25,7 +26,8 @@ export class UserService {
 
         Logger.log("Sign Up action reached");
 
-        const {name,email,password} = dto;
+        // const {studentNB,email,password} = dto;
+        const {email,password} = dto;
 
         //verify if there's a existed account already
         const existedUser = await this.UserModel.findOne({email:email},'name').exec();
@@ -40,25 +42,24 @@ export class UserService {
         const hashedPassword = await bcrypt.hash(password,salt);
 
         const newUserData = {
-            name: name,
+            // studentNB: studentNB,
             email: email,
             password: hashedPassword,
-            admin: false,
-            active:false,
         }
 
         //send to DB and save
         const newUser = new this.UserModel(newUserData);
-
+        newUser.loginCount = 1;
         await newUser.save();
-
+        Logger.log("Sign Up action completed");
         //return value correpond to the promise format
         return {
             id: newUser.id,
-            name: newUser.name,
+            // studentNB: newUser.studentNB,
             email: newUser.email,
             admin: newUser.admin,
             active: newUser.active,
+            loginCount: newUser.loginCount,
         };
     }
 
@@ -69,7 +70,7 @@ export class UserService {
 
         const {email,password} = dto;
 
-        const loggedUser = await this.UserModel.findOne({email:email},'id name password').exec();
+        const loggedUser = await this.UserModel.findOne({email:email},'id email password loginCount').exec();
 
         if(loggedUser){
             const isPassMatch = await bcrypt.compare(password,loggedUser.password);
@@ -77,6 +78,9 @@ export class UserService {
             if(isPassMatch){
                 // return loggedUser;
                 let payload = {sub: loggedUser.id, username: loggedUser.email};
+                loggedUser.loginCount = loggedUser.loginCount + 1;
+                loggedUser.save();
+                Logger.log("Sign In action completed");
                 return {
                     access_token : await this.jwtService.signAsync(payload),
                 };

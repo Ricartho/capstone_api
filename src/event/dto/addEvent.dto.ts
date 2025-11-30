@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class AddEventDto{
+export class AddEventDto {
 
     @ApiProperty({
         example: 'Event title',
@@ -20,17 +20,18 @@ export class AddEventDto{
     })
     public location: string;
 
-    @ApiProperty({
-        example: '0',
-        description: 'The reservation count of the event',
-    })
-    public reservationCount: number;
 
     @ApiProperty({
         example: '22/10/2025',
         description: 'The date of the event',
     })
     public eventDate: string;
+
+    @ApiProperty({
+        example: '11:00 AM',
+        description: 'The time of the event',
+    })
+    public eventTime: string;
 
 
 }

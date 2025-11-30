@@ -1,9 +1,11 @@
-import { Body, Controller, Post,InternalServerErrorException } from "@nestjs/common";
+import { Body, Controller, Post,UseGuards,InternalServerErrorException, Logger } from "@nestjs/common";
+import { AuthGuard } from "./auth.guard";
 import { UserService } from "./user.service";
 import { SignupDto } from "./dto/signup.dto";
 import { LoginDto } from "./dto/login.dto";
 import { UserDto } from "./dto/user.dto";
 import {
+    ApiBearerAuth,
     ApiOperation,
     ApiResponse,
     ApiTags,
@@ -11,13 +13,12 @@ import {
 
 
 @ApiTags('users')
-@Controller('users')
+@Controller('auth')
 export class UserController{
     
     constructor(private userService: UserService){}
 
-    @Post('/signup')
-
+    @Post('/register')
         @ApiOperation({summary: 'Create a new User.'})
         @ApiResponse({
         status: 201,
@@ -47,6 +48,7 @@ export class UserController{
         async signIn(@Body() dto:LoginDto):Promise<{access_token: string}>{
             try{
                 return await this.userService.signIn(dto);
+                
             }catch{
                 throw new InternalServerErrorException("Error while loging in the system");
             }

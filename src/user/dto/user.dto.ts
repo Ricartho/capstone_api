@@ -8,11 +8,11 @@ export class UserDto{
     })
     public id: string;
 
-     @ApiProperty({
-        example: 'user1',
-        description: 'A Username exemple',
-    })
-    public name: string;
+    //  @ApiProperty({
+    //    example: '00124578',
+    //     description: 'A student number exemple',
+    // })
+    // public studentNB: string;
 
     @ApiProperty({
         example: 'user@user.com',
@@ -31,4 +31,10 @@ export class UserDto{
         description:'Define if user account is active or disable'
     })
     public active: boolean;
+
+      @ApiProperty({
+        example: '0',
+        description:'Login count of the user'
+    })
+    public loginCount: number;
 }
