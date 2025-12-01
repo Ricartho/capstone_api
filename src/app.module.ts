@@ -7,6 +7,7 @@ import {validate} from './config/env.validation';
 import { DatabaseModule } from './database/database.module';
 import { userModule } from './user/user.module';
 import { eventModule } from './event/event.module';
+import { ReportModule } from './report/report.module';
 
 
 @Module({
@@ -17,6 +18,7 @@ import { eventModule } from './event/event.module';
   DatabaseModule,
   userModule,
   eventModule,
+  ReportModule,
 ],
   controllers: [AppController],
   providers: [AppService,Appconfig],
