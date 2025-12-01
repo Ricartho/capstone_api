@@ -3,13 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class SignupDto{
 
-//      @ApiProperty({
-//         example: '00124578',
-//         description: 'A student number exemple',
-//     })
-//     public studentNB: string;
-
-       @ApiProperty({
+   @ApiProperty({
          example: 'user@user.com',
          description: 'An email exemple',
     })
@@ -20,4 +14,16 @@ export class SignupDto{
          description: 'An password exemple',
     })
     public password: string
+
+    @ApiProperty({
+        example: 'Jon',
+        description: 'First name of the user',
+        })
+    public fName: string;
+
+    @ApiProperty({
+        example: 'Doe',
+        description: 'Last name of the user',
+        })
+    public lName: string;
 }

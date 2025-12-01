@@ -29,9 +29,21 @@ export class AddEventDto {
 
     @ApiProperty({
         example: '11:00 AM',
-        description: 'The time of the event',
+        description: 'The start time of the event',
     })
-    public eventTime: string;
+    public eventTimeStart: string;
+
+    @ApiProperty({
+        example: '11:00 AM',
+        description: 'The end time of the event',
+    })
+    public eventTimeEnd: string;
+
+     @ApiProperty({
+        example: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        description: 'The description of the event',
+    })
+    public description: string;
 
 
 }
