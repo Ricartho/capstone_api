@@ -17,7 +17,7 @@ import {
 @ApiTags('users')
 @Controller('auth')
 export class UserController{
-    
+    //test
     constructor(private userService: UserService){}
 
     //get all users from DB
