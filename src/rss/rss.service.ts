@@ -9,6 +9,7 @@ interface RssItem {
     title: string;
     link: string;
     pubDate: string;
+    category?: string;
     description?: string;
 }
 
@@ -36,6 +37,7 @@ export class RssService {
             title: item.title,
             description: item.description,
             link: item.link,
+            category: item.category,
             pubDate: item.pubDate,
         }));
 
@@ -56,9 +58,11 @@ export class RssService {
                 event.ele('link').txt(item.link);
                 event.ele('pubDate').txt(item.pubDate);
 
+                if(item.category){
+                    event.ele('category').txt(item.category);
+                }
                 if (item.description){
                     event.ele('description').txt(item.description);
-
                 }
             });
 
