@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { userModule } from './user/user.module';
 import { eventModule } from './event/event.module';
 import { ReportModule } from './report/report.module';
+import { RssModule } from './rss/rss.module'
 
 
 @Module({
@@ -19,6 +20,7 @@ import { ReportModule } from './report/report.module';
   userModule,
   eventModule,
   ReportModule,
+  RssModule,
 ],
   controllers: [AppController],
   providers: [AppService,Appconfig],
