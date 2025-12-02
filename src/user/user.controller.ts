@@ -49,7 +49,7 @@ export class UserController{
         })
         @ApiResponse({status: 400,description:'Error while getting user'})
 
-        async getEvent(@Param('id') userId: string):Promise<UserDto>{
+        async getUser(@Param('id') userId: string):Promise<UserDto>{
             try{
                 return await this.userService.getUserById(userId);
                }catch{
@@ -86,7 +86,7 @@ export class UserController{
         })
         @ApiResponse({status: 400,description:'Error while loging in the system'})
 
-        async signIn(@Body() dto:LoginDto):Promise<{access_token: string,user_id:string}>{
+        async signIn(@Body() dto:LoginDto):Promise<{access_token: string,user_id:string,user_admin:boolean}>{
             try{
                 return await this.userService.signIn(dto);
                 

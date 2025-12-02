@@ -8,6 +8,7 @@ import { UpdateEventDto } from "./dto/updateEvent.dto";
 import { EventDto } from "./dto/event.dto";
 
 
+
 @Injectable()
 export class EventService{
 
@@ -98,7 +99,7 @@ export class EventService{
 
     async updateEventById(eventId: string, dto: UpdateEventDto):Promise<EventDto>{
 
-          Logger.log(`Updating Extension with ID: '${eventId}'`);
+          Logger.log(`Updating event with ID: '${eventId}'`);
 
           const eventToUpdate = await this.EventModel.findById(eventId).exec();
              

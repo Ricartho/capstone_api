@@ -21,7 +21,7 @@ export class AddUserDto{
     public email: string;
 
 @ApiProperty({
-        example: 'true',
+        example: 'TRUE',
         description: 'role of user',
         })
     public admin: boolean;

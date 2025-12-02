@@ -71,13 +71,13 @@ export class UserService {
     }
 
     //method for user login
-    async signIn(dto: LoginDto):Promise<{access_token: string,user_id:string}> {
+    async signIn(dto: LoginDto):Promise<{access_token: string,user_id:string,user_admin:boolean}> {
 
         Logger.log("Sign In action reached");
 
         const {email,password} = dto;
 
-        const loggedUser = await this.UserModel.findOne({email:email},'id email password loginCount').exec();
+        const loggedUser = await this.UserModel.findOne({email:email},'id email password loginCount admin active').exec();
 
         if(loggedUser){
             const isPassMatch = await bcrypt.compare(password,loggedUser.password);
@@ -87,14 +87,16 @@ export class UserService {
                 let payload = {sub: loggedUser.id, username: loggedUser.email};
                 loggedUser.loginCount = loggedUser.loginCount + 1;
                 loggedUser.save();
-                Logger.log("Sign In action completed");
+                Logger.log("Sign In action completed",loggedUser.admin);
                 return {
                     access_token : await this.jwtService.signAsync(payload),
-                    user_id: loggedUser.id
+                    user_id: loggedUser.id,
+                    user_admin: loggedUser.admin,
+                    
                 };
             }
         }
-        
+         
        throw new UnauthorizedException("Invalid Password");
         
    }

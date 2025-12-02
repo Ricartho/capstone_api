@@ -33,13 +33,13 @@ export class UserDto{
     public author: string;
 
     @ApiProperty({
-        example: 'TRUE',
+        example: 'FALSE',
         description: 'Define is user is an Admin or a Student'
     })
     public admin: boolean;
 
     @ApiProperty({
-        example: 'TRUE',
+        example: ' TRUE',
         description:'Define if user account is active or disable'
     })
     public active: boolean;

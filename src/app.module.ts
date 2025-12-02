@@ -5,6 +5,7 @@ import {validate} from './config/env.validation';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { EventModule } from './event/event.module';
+import { ProgressModule } from './progress/progress.module';
 
 
 @Module({
@@ -15,6 +16,7 @@ import { EventModule } from './event/event.module';
   DatabaseModule,
   UserModule,
   EventModule,
+  ProgressModule,
 ],
   providers: [Appconfig],
 })
