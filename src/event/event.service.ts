@@ -8,6 +8,7 @@ import { UpdateEventDto } from "./dto/updateEvent.dto";
 import { EventDto } from "./dto/event.dto";
 
 
+
 @Injectable()
 export class EventService{
 
@@ -15,16 +16,16 @@ export class EventService{
     constructor(@InjectModel(Event.name) private EventModel: Model<Event>,){}
     
 
-    //display all events in the DB
+    //display all events from the DB
     async getAllEvents():Promise<any>{
 
         Logger.log("get all events action reached");
         
         //retreive all event from DB
-        const eventsFromDB = await this.EventModel.find({});
+        const eventsFromDB = await this.EventModel.find({}).sort({datePosted: 'desc'});
 
         Logger.log(eventsFromDB);
-        return eventsFromDB;
+        return eventsFromDB;  
 
     }
 
@@ -49,9 +50,11 @@ export class EventService{
                 location: eventFromDB.location,
                 reservationCount: eventFromDB.reservationCount,
                 eventDate: eventFromDB.eventDate,
-                eventTime: eventFromDB.eventTime,
+                eventTimeStart: eventFromDB.eventTimeStart,
+                eventTimeEnd:eventFromDB.eventTimeEnd,
                 archived: eventFromDB.archived,
                 datePosted: eventFromDB.datePosted,
+                description:eventFromDB.description,
                 
           }
     }
@@ -59,14 +62,16 @@ export class EventService{
     async addNewEvent(dto: AddEventDto): Promise<EventDto>{
             Logger.log("add event action reached");
 
-            const {title,category,location,eventDate,eventTime} = dto;
+            const {title,category,location,eventDate,eventTimeStart,eventTimeEnd,description} = dto;
 
             const newEventData = {
                 title: title,
                 category: category,
                 location: location,
                 eventDate: eventDate,
-                eventTime: eventTime,
+                eventTimeStart: eventTimeStart,
+                eventTimeEnd: eventTimeEnd,
+                description:description,
                 
             }
 
@@ -82,10 +87,11 @@ export class EventService{
                 location: newEvent.location,
                 reservationCount: newEvent.reservationCount,
                 eventDate: newEvent.eventDate,
-                eventTime: newEvent.eventTime,
+                eventTimeStart: newEvent.eventTimeStart,
+                eventTimeEnd:newEvent.eventTimeEnd,
                 archived: newEvent.archived,
                 datePosted: newEvent.datePosted,
-               
+                description:newEvent.description,
 
             };
     }
@@ -93,7 +99,7 @@ export class EventService{
 
     async updateEventById(eventId: string, dto: UpdateEventDto):Promise<EventDto>{
 
-          Logger.log(`Updating Extension with ID: '${eventId}'`);
+          Logger.log(`Updating event with ID: '${eventId}'`);
 
           const eventToUpdate = await this.EventModel.findById(eventId).exec();
              
@@ -109,14 +115,16 @@ export class EventService{
           //verify that the current user is the author of the current event and have rights on it
 
 
-          //then update system
+          //then update event
           if(dto.title !== undefined) eventToUpdate.title = dto.title;
           if(dto.category !== undefined) eventToUpdate.category = dto.category;
           if(dto.location !== undefined) eventToUpdate.location = dto.location;
           if(dto.reservationCount !== undefined) eventToUpdate.reservationCount = dto.reservationCount;
           if(dto.eventDate !== undefined) eventToUpdate.eventDate = dto.eventDate;
-          if(dto.eventTime !== undefined) eventToUpdate.eventTime = dto.eventTime;
-          if(dto.archived !== undefined) eventToUpdate.archived = dto.archived
+          if(dto.eventTimeStart !== undefined) eventToUpdate.eventTimeStart = dto.eventTimeStart;
+          if(dto.eventTimeEnd !== undefined) eventToUpdate.eventTimeEnd= dto.eventTimeEnd;
+          if(dto.archived !== undefined) eventToUpdate.archived = dto.archived;
+          if(dto.description !== undefined) eventToUpdate.description = dto.description;
 
           await eventToUpdate.save();
 
@@ -128,14 +136,17 @@ export class EventService{
                 location: eventToUpdate.location,
                 reservationCount: eventToUpdate.reservationCount,
                 eventDate: eventToUpdate.eventDate,
-                eventTime: eventToUpdate.eventTime,
+                eventTimeStart: eventToUpdate.eventTimeStart,
+                eventTimeEnd: eventToUpdate.eventTimeEnd,
                 archived: eventToUpdate.archived,
                 datePosted: eventToUpdate.datePosted,
+                description:eventToUpdate.description,
                 
           }
     }
 
     async deleteEventById(eventId: string): Promise<any>{
+      
         Logger.log(`Deleting event with ID: '${eventId}'`);
 
         const eventToDelete = await this.EventModel.findById(eventId).exec();

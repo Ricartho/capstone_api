@@ -1,6 +1,7 @@
 import { Controller, Get, Post,Param, Put,Delete,Body,UseGuards,InternalServerErrorException} from "@nestjs/common";
 import { AuthGuard } from "src/user/auth.guard";
 import { GetUserId } from "src/decorator/getUser.decorator";
+import { Logger } from "@nestjs/common";
 import { EventService } from "./event.service";
 import { AddEventDto } from "./dto/addEvent.dto";
 import { EventDto } from "./dto/event.dto";
@@ -48,7 +49,7 @@ export class EventController{
         @ApiResponse({
         status: 200,
         description: 'The event is retreived from DB',
-        example: '[{id: "68ae92da654aae1ba5aa7f87",title: "test", category: "test"},{id: "68ae92da654aae1ba5aa7f87",title: "test2", category: "test"}]',
+        example: '[{id: "68ae92da654aae1ba5aa7f87",title: "test", category: "test"}]',
         })
         @ApiResponse({status: 400,description:'Error while getting events'})
 
@@ -75,6 +76,7 @@ export class EventController{
 
         async addNewEvent(@Body() dto: AddEventDto): Promise<EventDto>{
             try{
+                Logger.log("User creation action reached");
                 return await this.eventService.addNewEvent(dto);
             }catch{
                 throw new InternalServerErrorException("Error while accessing events");
@@ -123,5 +125,23 @@ export class EventController{
                 throw new InternalServerErrorException("Error while updating the event");
             }
         }
+
+        //create attended
+
+        // @Get(':id//attended')
+        // @ApiOperation({summary: 'create attended.'})
+        // @ApiResponse({
+        //     status: 201,
+        //     description: 'attended',
+        //     example: '{id: "68ae92da654aae1ba5aa7f87",title: "test", category: "test"}',
+        //  })
+        // @ApiResponse({status: 400,description:'attended'})
+
+        // async deleteEvent(@Param('id') eventId:string):Promise<any>{
+        //     try{
+        //         return await this.eventService.deleteEventById(eventId);
+        //     }catch{
+        //         throw new InternalServerErrorException("Error while updating the event");
+        //     }
 
 }

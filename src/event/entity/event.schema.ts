@@ -22,13 +22,19 @@ export class Event{
         eventDate: string;
 
         @Prop()
-        eventTime: string;
+        eventTimeStart: string;
+
+        @Prop()
+        eventTimeEnd: string;
 
         @Prop({default: false})
         archived: boolean;
 
         @Prop({ type:Date, default: Date.now})
-        datePosted: string
+        datePosted: string;
+
+        @Prop()
+        description: string;
 
         // @Prop()
         // author:string

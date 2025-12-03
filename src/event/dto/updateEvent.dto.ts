@@ -37,12 +37,23 @@ export class UpdateEventDto {
         example: '11:00 AM',
         description: 'The time of the event',
          })
-         public eventTime?: string;
+         public eventTimeStart?: string;
+    @ApiPropertyOptional({
+        example: '11:00 AM',
+        description: 'The time of the event',
+         })
+         public eventTimeEnd?: string;
 
     @ApiPropertyOptional({
         example: 'FALSE',
         description: 'Is the event still active or archived',
          })
         public archived?: boolean;
+
+    @ApiPropertyOptional({
+        example: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        description: 'The description of the event',
+      })
+        public description: string;
 
 }

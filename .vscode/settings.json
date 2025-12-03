@@ -1,0 +1,5 @@
+{
+    "appService.showBuildDuringDeployPrompt": false,
+    "appService.defaultWebAppToDeploy": "/subscriptions/c9147234-eb69-4581-9702-0c0c0f85020d/resourceGroups/CapstoneAPI_group/providers/Microsoft.Web/sites/CapstoneAPI",
+    "appService.deploySubpath": "."
+}
