@@ -1,6 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { MilestoneService } from './milestone.service';
-import { CreateMilestoneDto, UpdateMilestoneDto, QueryMilestonesDto } from './dto/milestone.dto';
+import {
+  CreateMilestoneDto,
+  UpdateMilestoneDto,
+  QueryMilestonesDto,
+} from './dto/milestone.dto';
 
 @Controller('api/milestones')
 export class MilestoneController {
@@ -29,5 +33,44 @@ export class MilestoneController {
   @Delete(':id')
   deleteMilestone(@Param('id') id: string) {
     return this.milestoneService.remove(id);
+  }
+
+  // Global definition: which events count toward this milestone
+  @Post(':id/events/:eventId')
+  addEventToMilestone(@Param('id') id: string, @Param('eventId') eventId: string) {
+    return this.milestoneService.addEvent(id, eventId);
+  }
+
+  @Delete(':id/events/:eventId')
+  removeEventFromMilestone(@Param('id') id: string, @Param('eventId') eventId: string) {
+    return this.milestoneService.removeEvent(id, eventId);
+  }
+
+  // Per user progress endpoints
+
+  @Post(':id/users/:userId/events/:eventId')
+  addEventForUser(
+    @Param('id') milestoneId: string,
+    @Param('userId') userId: string,
+    @Param('eventId') eventId: string,
+  ) {
+    return this.milestoneService.addEventForUser(milestoneId, userId, eventId);
+  }
+
+  @Delete(':id/users/:userId/events/:eventId')
+  removeEventForUser(
+    @Param('id') milestoneId: string,
+    @Param('userId') userId: string,
+    @Param('eventId') eventId: string,
+  ) {
+    return this.milestoneService.removeEventForUser(milestoneId, userId, eventId);
+  }
+
+  @Get(':id/users/:userId/progress')
+  getUserProgress(
+    @Param('id') milestoneId: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.milestoneService.getUserProgress(milestoneId, userId);
   }
 }

@@ -1,4 +1,3 @@
-// src/event/event.controller.ts
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto, UpdateEventDto, QueryEventsDto } from './dto/event.dto';
@@ -30,5 +29,11 @@ export class EventController {
   @Delete(':id')
   deleteEvent(@Param('id') id: string) {
     return this.eventService.remove(id);
+  }
+
+  // User attends event - automatically updates that user's milestone progress
+  @Post(':id/users/:userId/attend')
+  attendEvent(@Param('id') eventId: string, @Param('userId') userId: string) {
+    return this.eventService.recordAttendance(eventId, userId);
   }
 }

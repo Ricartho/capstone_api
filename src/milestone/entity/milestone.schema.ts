@@ -1,7 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
-@Schema({ collection: 'milestones', timestamps: true })
+@Schema({
+  collection: 'milestones',
+  timestamps: true,
+})
 export class Milestone {
   @Prop({ required: true, trim: true })
   title!: string;
@@ -11,6 +14,10 @@ export class Milestone {
 
   @Prop({ type: Number, required: true, min: 0 })
   goalEventCount!: number;
+
+  // Events that can count toward this milestone
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Event' }], default: [] })
+  events!: Types.ObjectId[];
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -28,4 +35,8 @@ MilestoneSchema.set('toJSON', {
     delete ret._id;
     return ret;
   },
+});
+
+MilestoneSchema.virtual('currentEventCount').get(function (this: MilestoneDocument) {
+  return this.events?.length ?? 0;
 });
