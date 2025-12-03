@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { parseStringPromise } from 'xml2js';
 
+//npm install xml2js xmlbuilder2 axios
+
 @Injectable()
 export class OwlLifeFeedService {
     private FEED_URL = 'https://owllife.kennesaw.edu/events.rss';
