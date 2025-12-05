@@ -21,28 +21,52 @@ export class ReportController {
 
     @Get('download/:id')
     async downloadReport(@Param('id') id: string, @Res() res:Response){
-        //Retrieve event
-        if(!Types.ObjectId.isValid(id)){
-            throw new NotFoundException(`Invalid event id`);
+        // //Retrieve event
+        // if(!Types.ObjectId.isValid(id)){
+        //     throw new NotFoundException(`Invalid event id`);
+        // }
+
+        // const event = await this.eventModel.findById(id).exec();
+        // if(!event) {
+        //     throw new NotFoundException(`Event not found`);
+        // }
+
+
+    try {
+        console.log("Download request ID:", id);
+
+        // If it's a MongoDB ID, fetch title + validate
+        let fileName = `event-${id}.txt`;
+
+        const isMongoId = /^[0-9a-fA-F]{24}$/.test(id);
+
+        if (isMongoId) {
+            const event = await this.eventModel.findById(id).exec();
+
+            if (!event) {
+                throw new NotFoundException("Event not found in MongoDB");
+            }
+
+            fileName =
+                "report-" + event.title.replace(/[^a-z0-9_\-]/gi, "_") + ".txt";
+        } else {
+            // External event — name it using the ID
+            fileName = `report-owllife-${id}.txt`;
         }
 
-        const event = await this.eventModel.findById(id).exec();
-        if(!event) {
-            throw new NotFoundException(`Event not found`);
-        }
+        // Generate the correct report (internal or external)
+        const fileBuffer = await this.reportService.generateUnifiedReport(id);
 
-        //Create the file
-        const fileBuffer = await this.reportService.generateReport(id);
+        res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
+        res.setHeader("Content-Type", "text/plain");
 
-        //Clean title
-        const cleanTitle = event.title.replace(/[^a-z0-9_\-]/gi, '_');
-
-        //Response header for the file download
-        res.setHeader('Content-Disposition', `attachment; filename=report-${cleanTitle}.txt`);
-        res.setHeader('Content-Type', 'text/plain');
-
-        //Send file
         res.send(fileBuffer);
-    }
+
+    } catch (err) {
+    console.error("ERROR:", err);
+    throw err;
+}
+
+     }
 
 }

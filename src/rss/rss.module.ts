@@ -11,5 +11,6 @@ import { Event, EventSchema } from '../event/entity/event.schema';
   ],
   controllers: [RssController],
   providers: [RssService, OwlLifeFeedService],
+  exports: [OwlLifeFeedService],
 })
 export class RssModule {}

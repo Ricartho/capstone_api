@@ -8,6 +8,16 @@ import { parseStringPromise } from 'xml2js';
 export class OwlLifeFeedService {
     private FEED_URL = 'https://owllife.kennesaw.edu/events.rss';
 
+    //Get event ID
+    extractId(link: string): string {
+        if(!link) return '';
+
+        const cleanLink = link.split('?')[0];
+
+        const match = cleanLink.match(/(\d+)(?!.*\d)/);
+        return match ? match[1] : '';
+    }
+
     async fetchOwlLifeEvents() {
         const { data: xml } =  await axios.get(this.FEED_URL);
 
