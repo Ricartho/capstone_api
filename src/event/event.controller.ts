@@ -41,6 +41,18 @@ export class EventController{
           
         }
 
+         //get event from RSS feed
+        @Get('/feed')
+
+        async fetchFeed():Promise<any>{
+             Logger.log("RSS feed action in service reached");
+            try{
+                return await this.eventService.getEventsFromRss();
+            }catch{
+                throw new InternalServerErrorException("Error while updating the event");
+            }
+        }
+
 
     //get a single event from Db using ID
     @Get(':id')
@@ -126,22 +138,6 @@ export class EventController{
             }
         }
 
-        //create attended
-
-        // @Get(':id//attended')
-        // @ApiOperation({summary: 'create attended.'})
-        // @ApiResponse({
-        //     status: 201,
-        //     description: 'attended',
-        //     example: '{id: "68ae92da654aae1ba5aa7f87",title: "test", category: "test"}',
-        //  })
-        // @ApiResponse({status: 400,description:'attended'})
-
-        // async deleteEvent(@Param('id') eventId:string):Promise<any>{
-        //     try{
-        //         return await this.eventService.deleteEventById(eventId);
-        //     }catch{
-        //         throw new InternalServerErrorException("Error while updating the event");
-        //     }
+       
 
 }

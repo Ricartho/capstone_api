@@ -16,13 +16,14 @@ export class ProgressService {
                
         ){}
 
-    async addProgress(userId:string, eventId:string,eventTitle:string):Promise<any>{
+    async addProgress(userId:string, eventId:string,eventTitle:string,eventCategory:string):Promise<any>{
                 
       Logger.log("Progress action reached");
 
       const newProgressData = {
         id_user: userId,
         id_event: eventId,
+        id_category: eventCategory,
         event_title: eventTitle
       }
 

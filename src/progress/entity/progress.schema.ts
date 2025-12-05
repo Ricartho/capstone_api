@@ -13,6 +13,9 @@ export class Progress{
         id_event: string;
 
         @Prop()
+        id_category:string
+
+        @Prop()
         event_title:string
 
         @Prop({ type:Date, default: Date.now})

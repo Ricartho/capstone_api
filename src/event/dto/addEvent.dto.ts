@@ -12,7 +12,7 @@ export class AddEventDto {
         example: 'Event category',
         description: 'The category of the event',
     })
-    public category: string;
+    public category: string[];
 
     @ApiProperty({
         example: 'Event location',

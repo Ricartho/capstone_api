@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, UnauthorizedException,NotFoundException} from "@nestjs/common";
+import { Injectable, ConflictException, UnauthorizedException,NotFoundException,InternalServerErrorException,Redirect} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
 import { InjectModel } from "@nestjs/mongoose";
@@ -10,6 +10,8 @@ import { AddUserDto } from "./dto/addUser.dto";
 import { UpdateUserDto } from "./dto/updateUser.dto";
 import { SignupDto } from "./dto/signup.dto";
 import { LoginDto } from "./dto/login.dto";
+import { MyMailerService } from "src/mailer/mailer.service";
+import { SrvRecord } from "dns";
 
 
 
@@ -22,9 +24,110 @@ export class UserService {
     //import the user model in the whole class and JWT service
     constructor(@InjectModel(User.name) private UserModel: Model<User>,
                 private jwtService : JwtService,
+                private  myMailerService : MyMailerService,
         ){}
 
+    async verifAccount(token :string):Promise<any> {
+        Logger.log("verif action reached");
+        Logger.log(token);
+       
+        //verify if there's a existed account already
+        const existedUser = await this.UserModel.findOne({verificationToken:token},'fName verificationToken').exec();
+        try{
+            if(existedUser){
+                existedUser.active = true;
+                await existedUser.save();            
+            }
+        }catch(e){
+            Logger.log(e);
+            throw new InternalServerErrorException("Error while saving new user in DB");
+        }
+        return existedUser;
+    }
+    
+     async verifAccount2(token :string):Promise<any> {
+        Logger.log("verif action reached");
+        Logger.log(token);
+       
+        //verify if there's a existed account already
+        const existedUser = await this.UserModel.findOne({passwordResetToken:token},'passwordResetToken').exec();
+        try{
+            if(existedUser){
+               return existedUser;           
+            }
+        }catch(e){
+            Logger.log(e);
+            throw new InternalServerErrorException("Error while saving new user in DB");
+        }
+        return existedUser;
+    }
 
+    async changePasswordLink(email):Promise<any>{
+        Logger.log(" Reset Password link action reached");
+        //verify if there's a existed account already
+    
+        Logger.log(email.email);
+        const existedUser = await this.UserModel.findOne({email:email.email},'fName').exec();
+        Logger.log(existedUser);
+
+         if(!existedUser){
+            //if existed stop and throw error exception
+            Logger.log("error1");
+            throw new NotFoundException("No User with this email exists");
+        }
+
+         //generate random token value for mail verif with email provided
+        const cipher = crypto.randomUUID();
+
+        existedUser.passwordResetToken = cipher;
+
+        try{
+            await existedUser.save();
+             //send verification mail to registered user.
+            const verification_link = `http://localhost:3000/api/auth/reset-password/${cipher}`;
+            await  this.myMailerService.sendResetPasswordEmail(email.email,email.email,verification_link);
+            Logger.log("Mail action completed");
+            return existedUser;
+        }catch(e){
+            Logger.log("Error while reseting password");
+            throw new InternalServerErrorException("Error while reseting password");
+        }
+    }
+
+    async updatePassword(token :string,password :string):Promise<any>{
+        //verify if there's a existed account already
+        const existedUser = await this.UserModel.findOne({passwordResetToken:token}).exec();
+        Logger.log(existedUser);
+         if(!existedUser){
+            //if existed stop and throw error exception
+            Logger.log("fout");
+            throw new NotFoundException("This token is incorrect or expired");
+        }
+            //password hashing
+            const salt = await bcrypt.genSalt();
+            const hashedPassword = await bcrypt.hash(password,salt);
+           existedUser.password = hashedPassword;
+           
+            
+            
+          try{
+            
+            await existedUser.save();
+            Logger.log(existedUser);
+            Logger.log("Password change completed");
+
+            //send verification mail to registered user.
+           
+            Logger.log("Mail action completed");
+            return existedUser;
+
+        }catch(e){
+            Logger.log(e);
+            throw new InternalServerErrorException("Error while saving new user in DB");
+        }
+
+        
+    }
     //method for new user sign up
     async signUp(dto: SignupDto): Promise<UserDto>{
 
@@ -34,7 +137,7 @@ export class UserService {
         const {fName,lName,email,password} = dto;
 
         //verify if there's a existed account already
-        const existedUser = await this.UserModel.findOne({email:email},'name').exec();
+        const existedUser = await this.UserModel.findOne({email:email},'fName').exec();
 
         if(existedUser){
             //if existed stop and throw error exception
@@ -45,18 +148,38 @@ export class UserService {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password,salt);
 
+        //generate random token value for mail verif with email provided
+        const cipher = crypto.randomUUID();
+        
+
+        //prepare data structure to save in DB
         const newUserData = {
             fName:fName,
             lName: lName,
             email: email,
             password: hashedPassword,
+            verificationToken: cipher,
         }
 
         //send to DB and save
         const newUser = new this.UserModel(newUserData);
         // newUser.loginCount = 1;
-        await newUser.save();
-        Logger.log("Sign Up action completed");
+        try{
+
+            await newUser.save();
+            Logger.log("Sign Up action completed");
+
+            //send verification mail to registered user.
+            const verification_link = `http://localhost:3000/api/auth/verif/${cipher}`;
+            await  this.myMailerService.sendVerificationEmail(email,email,verification_link);
+            Logger.log("Mail action completed");
+
+        }catch(e){
+            Logger.log(e);
+            throw new InternalServerErrorException("Error while saving new user in DB");
+        }
+
+      
         //return value correpond to the promise format
         return {
             id: newUser.id,
@@ -71,7 +194,7 @@ export class UserService {
     }
 
     //method for user login
-    async signIn(dto: LoginDto):Promise<{access_token: string,user_id:string,user_admin:boolean}> {
+    async signIn(dto: LoginDto):Promise<{access_token: string,user_id:string,user_admin:boolean,active:boolean}> {
 
         Logger.log("Sign In action reached");
 
@@ -92,6 +215,7 @@ export class UserService {
                     access_token : await this.jwtService.signAsync(payload),
                     user_id: loggedUser.id,
                     user_admin: loggedUser.admin,
+                    active: loggedUser.active
                     
                 };
             }
@@ -107,7 +231,7 @@ export class UserService {
 
         Logger.log("User creation action reached");
 
-        const {fName,lName,email,admin} = dto;
+        const {fName,lName,email,admin,password} = dto;
 
         //verify if there's a existed account already
         const existedUser = await this.UserModel.findOne({email:email},'name').exec();
@@ -119,7 +243,10 @@ export class UserService {
 
         //password hashing
         const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash('Ksu_2025#',salt);
+        const hashedPassword = await bcrypt.hash(password,salt);
+
+        //generate random token value for mail verif with email provided
+        const cipher = crypto.randomUUID();
 
         const newUserData = {
             fName: fName,
@@ -127,12 +254,23 @@ export class UserService {
             email: email,
             password: hashedPassword,
             admin:admin,
+             verificationToken: cipher,
         };
 
         //create and save in DB
 
         const newUser = new this.UserModel(newUserData);
-        await newUser.save();
+        try{
+            await newUser.save();
+             //send verification mail to registered user.
+            const verification_link = `http://localhost:3000/api/auth/verif/${cipher}`;
+            await  this.myMailerService.sendVerificationEmail(email,email,verification_link);
+            Logger.log("Mail action completed");
+        }catch(e){
+            Logger.log(e);
+            throw new InternalServerErrorException("Error while saving new user in DB");
+        }
+     
 
         return{
             id: newUser.id,

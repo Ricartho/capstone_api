@@ -20,6 +20,12 @@ export class AddUserDto{
         })
     public email: string;
 
+    @ApiProperty({
+         example: 'MyPassword',
+         description: 'An password exemple',
+    })
+    public password: string
+
 @ApiProperty({
         example: 'TRUE',
         description: 'role of user',

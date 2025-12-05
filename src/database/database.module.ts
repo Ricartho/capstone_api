@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule, MongooseModuleAsyncOptions } from '@nestjs/mongoose';
 
 @Module({
+    //need to use ENV VARIABLES INSTEAD
     imports:[MongooseModule.forRootAsync({
         imports: [ConfigModule],
         useFactory: async(configService: ConfigService) =>({

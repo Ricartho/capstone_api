@@ -21,10 +21,16 @@ export class User{
     @Prop({default:"N/A"})
     author: string;
 
+    @Prop()
+    verificationToken: string;
+
+    @Prop()
+    passwordResetToken: string;
+
     @Prop({default: false})
     admin: boolean;
 
-    @Prop({default: true})
+    @Prop({default: false})
     active: boolean;
 
     @Prop({default:0})

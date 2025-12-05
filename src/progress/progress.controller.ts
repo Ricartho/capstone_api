@@ -18,8 +18,8 @@ export class ProgressController{
 
     constructor(private progressService: ProgressService){}
 
-    //Add a new attended on a specific for a specific user
-    @Get('/:userId/:eventId/:eventTitle')
+    //Add a new attended on a specific event for a specific user
+    @Get('/:userId/:eventId/:eventCategory/:eventTitle')
         @ApiOperation({summary: 'New progress'})
         @ApiResponse({
         status: 200,
@@ -28,8 +28,9 @@ export class ProgressController{
         })
         @ApiResponse({status: 400,description:'New progress'})
 
-        async addProgress(@Param('eventId') eventId: string,@Param('userId') userId: string,@Param('eventTitle') eventTitle: string):Promise<any>{
-            return await this.progressService.addProgress(userId,eventId,eventTitle);
+        async addProgress(@Param('eventId') eventId: string,@Param('userId') userId: string,@Param('eventCategory') 
+                            eventCategory: string,@Param('eventTitle') eventTitle:string):Promise<any>{
+            return await this.progressService.addProgress(userId,eventId,eventTitle,eventCategory);
         }
 
         

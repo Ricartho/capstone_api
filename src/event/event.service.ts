@@ -6,7 +6,7 @@ import {Event} from "./entity/event.schema";
 import { AddEventDto } from "./dto/addEvent.dto";
 import { UpdateEventDto } from "./dto/updateEvent.dto";
 import { EventDto } from "./dto/event.dto";
-
+import * as Parser from 'rss-parser';
 
 
 @Injectable()
@@ -28,6 +28,51 @@ export class EventService{
         return eventsFromDB;  
 
     }
+
+    //get event from RSS feed method
+    async getEventsFromRss():Promise<any>{
+      Logger.log("RSS feed action in service reached");
+
+      //RSS parser
+      const rssParser = new Parser(
+        {
+          customFields: {
+            feed: [],
+            item: ['host','location','status','start','end'],
+          }
+        }
+      );
+      
+
+      const resultArray = <any>[];
+    try{
+         const feedFromRss = await rssParser.parseURL('https://owllife.kennesaw.edu/organization/ccse/events.rss');
+         console.log(feedFromRss.title);
+         
+        for(let i=0; i<feedFromRss.items.length; i++){
+          const currentItem = feedFromRss.items[i];
+          const feedFormated = {
+            title: currentItem.title,
+            location: currentItem.location,
+            eventDate: currentItem.start,
+            eventTimeStart: currentItem.start,
+            eventTimeEnd: currentItem.end,
+            author: currentItem.host,
+            description: currentItem.contentSnippet,
+            datePosted: currentItem.isoDate,
+            category: currentItem.categories,
+          };
+          const db = new this.EventModel(feedFormated);
+          await db.save();
+          resultArray.push(feedFormated);
+         }
+         
+         return resultArray;
+      }catch(error){
+        console.error('Error fetching or parsing RSS feed:', error);
+        }
+     
+  }
 
     //get a specific event from DB using ID
 

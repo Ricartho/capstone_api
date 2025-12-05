@@ -1,4 +1,5 @@
-import { Body, Controller, Post,UseGuards,InternalServerErrorException, Logger, Put, Param, Delete, Get } from "@nestjs/common";
+import { Body, Controller, Post,UseGuards,InternalServerErrorException, Logger, Put, Param, Delete, Get,Res,Redirect, HttpStatus} from "@nestjs/common";
+import { Response } from 'express'; 
 import { AuthGuard } from "./auth.guard";
 import { UserService } from "./user.service";
 import { SignupDto } from "./dto/signup.dto";
@@ -19,6 +20,60 @@ import {
 export class UserController{
     //test
     constructor(private userService: UserService){}
+      //reset password
+      @Post('/forgot-password')
+      async generateResetPassLink(@Body() email):Promise<any>{
+          
+         Logger.log(" Reset Password link action reached");
+        try{
+            return await this.userService.changePasswordLink(email);
+        }catch(e){
+            Logger.log(e);
+                throw new InternalServerErrorException("Error while delating user");
+            }
+      }
+
+     
+
+    //   @Get('/reset-password/:token')
+    //     @Redirect(`http://localhost:3001/update-password/${Param('token')}`)
+    //      async verif2(@Param('token') token :string):Promise<any>{
+    //      Logger.log("Password token verif action reached");
+    //      Logger.log(token);
+        
+    //         try{
+    //             return await this.userService.verifAccount2(token);
+    //         }catch(e){
+    //             throw new InternalServerErrorException("Error while delating user");
+    //         }
+    //    }
+
+        @Get('/reset-password/:token')
+            @Redirect()
+            redirectToUpdatePass(@Param('token') token: string){
+                return{
+                    url:`http://localhost:3001/update-password/${token}`,
+                    statusCode: HttpStatus.TEMPORARY_REDIRECT,
+                }
+            }
+              
+       
+
+
+
+      //verify user account from sign up
+      @Get('/verif/:token')
+         @Redirect('http://localhost:3001/')
+         async verif(@Param('token') token:string):Promise<any>{
+         Logger.log("User verif action reached");
+         Logger.log(token);
+        
+            try{
+                await this.userService.verifAccount(token);
+            }catch(e){
+                throw new InternalServerErrorException("Error while delating user");
+            }
+       }
 
     //get all users from DB
     @Get('/users')
@@ -86,7 +141,8 @@ export class UserController{
         })
         @ApiResponse({status: 400,description:'Error while loging in the system'})
 
-        async signIn(@Body() dto:LoginDto):Promise<{access_token: string,user_id:string,user_admin:boolean}>{
+        async signIn(@Body() dto:LoginDto):Promise<{access_token: string,user_id:string,user_admin:boolean,active:boolean}>{
+         
             try{
                 return await this.userService.signIn(dto);
                 
@@ -108,6 +164,7 @@ export class UserController{
         })
         @ApiResponse({status: 400,description:'Error while creating new user'})
         async createUser(@Body() dto: AddUserDto):Promise<UserDto>{
+            
             try{
                 return await this.userService.addNewUser(dto);
             }catch(e){
@@ -135,11 +192,21 @@ export class UserController{
             }
        }
 
+      @Post('/updatePassword/:token')
+      async updatePassword(@Param('token') token: string, @Body() password):Promise<any>{
+         Logger.log("update password action reached");
+        try{
+            return await this.userService.updatePassword(token,password);
+        }catch(e){
+              throw new InternalServerErrorException("Error while updating password");
+            }
+       }
+
        //delete user
 
        @Delete('/users/:id')
 
-       @ApiOperation({summary: 'Delete existing user.'})
+        @ApiOperation({summary: 'Delete existing user.'})
         @ApiResponse({
             status: 201,
             description: 'user deleted from DB',
@@ -154,4 +221,7 @@ export class UserController{
                 throw new InternalServerErrorException("Error while delating user");
             }
        }
+
+     
+
 }

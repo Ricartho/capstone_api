@@ -10,7 +10,7 @@ export class Event{
         title: string;
 
         @Prop()
-        category: string;
+        category: string[];
 
         @Prop()
         location: string;
@@ -36,8 +36,8 @@ export class Event{
         @Prop()
         description: string;
 
-        // @Prop()
-        // author:string
+        @Prop()
+        author:string
     }
 
 export const EventSchema = SchemaFactory.createForClass(Event);

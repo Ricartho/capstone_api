@@ -13,7 +13,7 @@ export class UpdateEventDto {
         example: 'Event category',
         description: 'The category of the event',
          })
-        public category?: string;
+        public category?: string[];
      
     @ApiPropertyOptional({
         example: 'Event location',

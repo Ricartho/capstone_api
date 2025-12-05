@@ -5,6 +5,7 @@ import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { JwtModule, JwtModuleAsyncOptions } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MyMailerService } from "src/mailer/mailer.service";
 
 
 
@@ -16,7 +17,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         ConfigModule,
     ],
     controllers:[UserController],
-    providers:[UserService],
+    providers:[UserService,MyMailerService],
     exports: [UserService],
 })
 
